@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="FileSaver.min.js"></script>
+    <title>Parkering</title>
+    <style>
+        #parkering{
+            position: absolute;
+            left: 350px;
+        }
+        #lagre {
+            position: absolute;
+            left:280px;
+            top:200px;
+        }
+        #resultat {
+            max-width: 260px;
+        }
+    </style>
+    <script>
+        window.onload=oppstart;
+        function oppstart() {
+            document.getElementById("resultat").innerHTML+="\n";
+            for (var i=1;i<6;i++) {
+            document.getElementById("parkering"+i).parkert=false;
+            document.getElementById("parkering"+i).elbil="Nei";
+            document.getElementById("parkering"+i).starttid="00:00:00";
+            document.getElementById("parkering"+i).slutttid="00:00:00";
+        }
+        document.getElementById("innpakning").onclick = skiftbilde;
+        document.getElementById("lagre").onclick = lagre;
+        function skiftbilde(evt) {
+            if (!evt.target.parkert) {
+                var tid = new Date();
+                evt.target.src = "red.PNG";
+                evt.target.starttid=tid.toLocaleTimeString();
+                evt.target.parkert=true;
+                }
+            else {
+                var tid = new Date();
+                var elbil=confirm("Er dette en el-bil trykk OK");
+                if (elbil) {
+                    evt.target.elbil="Ja";
+                }
+                else {
+                    evt.target.elbil="Nei";
+                    }
+                evt.target.src = "green.PNG";
+                evt.target.slutttid=tid.toLocaleTimeString();
+                evt.target.parkert=false;
+                document.getElementById("resultat").innerHTML+=evt.target.id+","+evt.target.starttid+","+evt.target.slutttid+","+evt.target.elbil+"\n";
+            }
+        }
+        function lagre() {
+            var tekst=document.getElementById("resultat").innerHTML;
+            var blob=new Blob([tekst],{type: "text/plain;charset=utf-8"});
+            saveAs(blob,"parkering.txt")
+        }
+    }
+    </script>
+</head>
+<body>
+<textarea id="resultat" rows="10" cols="33">Parkering,starttid,sluttid,El-bil?</textarea>
+
+<img src="parkering.PNG" id="parkering" width="800px" height="800px">
+<div id="innpakning">
+    <img src="green.PNG" id="parkering1" width="20px" height="20px" style="position: absolute; left:380px; top:490px;">
+    <img src="green.PNG" id="parkering2" width="20px" height="20px" style="position: absolute; left:400px; top:510px;">
+    <img src="green.PNG" id="parkering3" width="20px" height="20px" style="position: absolute; left:420px; top:540px;">
+    <img src="green.PNG" id="parkering4" width="20px" height="20px" style="position: absolute; left:440px; top:570px;">
+    <img src="green.PNG" id="parkering5" width="20px" height="20px" style="position: absolute; left:460px; top:590px;">
+</div>
+<button id="lagre">Lagre</button>
+</body>
+</html>
